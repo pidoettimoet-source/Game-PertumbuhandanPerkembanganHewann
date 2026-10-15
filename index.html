@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Petualangan Biologi - Pertumbuhan dan Perkembangan Hewan</title>
+<style>
+:root{--ink:#17324d;--green:#16865b;--mint:#e8fff4;--blue:#eaf4ff;--yellow:#fff3c4;--pink:#ffe9ed}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(135deg,#e7fff4,#eaf4ff 55%,#fff6d8);color:var(--ink);min-height:100vh}
+header{padding:22px 16px;text-align:center;background:#ffffffc9;border-bottom:1px solid #d6e9e2}
+header .emoji{font-size:2.5rem}h1{margin:4px 0;font-size:clamp(1.5rem,4vw,2.5rem)}header p{margin:8px auto;max-width:700px}
+main{max-width:850px;margin:24px auto;padding:0 14px 40px}.panel{background:#fff;border:1px solid #dcebe7;border-radius:22px;padding:clamp(18px,4vw,30px);box-shadow:0 12px 35px #17324d12}
+.stats{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#557086;font-weight:700;font-size:.9rem}.progress{height:9px;background:#e7efee;border-radius:99px;overflow:hidden;margin:14px 0 22px}.bar{height:100%;width:0;background:linear-gradient(90deg,#16a36a,#65c8a0);transition:width .25s}
+.tag{display:inline-block;background:var(--mint);color:#08744b;padding:6px 10px;border-radius:99px;font-size:.8rem;font-weight:800}
+h2{font-size:clamp(1.25rem,3vw,1.7rem);line-height:1.35;margin:16px 0}.animal{font-size:3.2rem;text-align:center;background:var(--blue);border-radius:18px;padding:12px;margin:14px 0}
+.options{display:grid;gap:10px}.option{border:2px solid #e2eae9;background:white;color:var(--ink);border-radius:14px;padding:14px;text-align:left;font-size:1rem;cursor:pointer;display:flex;gap:12px;align-items:center;transition:.15s}.option:hover:not(:disabled){border-color:#69b99a;background:#f5fff9}.letter{width:32px;height:32px;flex:0 0 32px;border-radius:50%;background:#edf4f2;display:grid;place-items:center;font-weight:800}.option.selected{border-color:#2674cf;background:#edf5ff}.option.correct{border-color:#15945f;background:#e5fff0}.option.wrong{border-color:#d65b68;background:#fff0f1}.feedback{padding:14px;border-radius:14px;background:#f3f7f6;margin-top:14px;line-height:1.5}.feedback.good{background:#e5fff0}.feedback.bad{background:#fff0f1}
+.actions{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:22px;flex-wrap:wrap}.score strong{font-size:1.5rem;color:var(--green)}button.primary,button.secondary{border:0;border-radius:12px;padding:12px 18px;font-size:1rem;font-weight:800;cursor:pointer}.primary{background:var(--green);color:white}.primary:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#edf3f2;color:var(--ink)}
+.intro{text-align:center}.intro .big{font-size:4rem}.intro ul{text-align:left;line-height:1.8;max-width:500px;margin:18px auto}.hide{display:none}.result{text-align:center}.result .medal{font-size:4rem}.small{font-size:.9rem;color:#617a8b}
+footer{text-align:center;padding:0 15px 24px;color:#617a8b;font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="emoji">🦋 🐸 🐣</div>
+  <h1>Petualangan Biologi</h1>
+  <p>Game edukatif IPA kelas VIII: <strong>Pertumbuhan dan Perkembangan Hewan</strong></p>
+</header>
+<main>
+<section class="panel intro" id="intro">
+  <div class="big">🌱</div>
+  <span class="tag">MISI PENJELAJAH BIOLOGI</span>
+  <h2>Siap menjelajahi daur hidup hewan?</h2>
+  <p>Jawab 10 tantangan, pelajari fakta menarik, dan kumpulkan poin sampai 100!</p>
+  <ul>
+    <li>🔎 Bedakan pertumbuhan dan perkembangan</li>
+    <li>🦋 Kenali metamorfosis sempurna dan tidak sempurna</li>
+    <li>🐸 Susun daur hidup hewan dengan benar</li>
+    <li>🏆 Dapatkan skor dan gelar akhir</li>
+  </ul>
+  <button class="primary" onclick="startGame()">Mulai Petualangan 🚀</button>
+</section>
+
+<section class="panel hide" id="game">
+  <div class="stats"><span id="level">TANTANGAN 1</span><span id="count">Soal 1 dari 10</span></div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="animal" id="animal">🐾</div>
+  <span class="tag">PILIH JAWABAN YANG TEPAT</span>
+  <h2 id="question"></h2>
+  <div class="options" id="options"></div>
+  <div id="feedback" class="feedback hide" aria-live="polite"></div>
+  <div class="actions">
+    <div class="score">Skor: <strong id="score">0</strong><span class="small"> / 100</span></div>
+    <button class="primary" id="check" disabled onclick="checkAnswer()">Periksa Jawaban</button>
+    <button class="primary hide" id="next" onclick="nextQuestion()">Soal Berikutnya →</button>
+  </div>
+</section>
+
+<section class="panel result hide" id="result">
+  <div class="medal" id="medal">🏆</div>
+  <h2 id="resultTitle">Petualangan Selesai!</h2>
+  <p>Skor akhir kamu</p>
+  <div style="font-size:3rem;font-weight:900;color:#16865b" id="finalScore">0/100</div>
+  <p id="resultText"></p>
+  <button class="primary" onclick="restartGame()">Main Lagi 🔄</button>
+</section>
+</main>
+<footer>Media pembelajaran IPA • SMP Kelas VIII • Belajar sambil bermain</footer>
+<script>
+const questions=[
+{emoji:"🐣",q:"Apa yang dimaksud dengan pertumbuhan pada hewan?",a:["Perubahan perilaku hewan","Bertambahnya ukuran dan massa tubuh","Perubahan tempat hidup","Kemampuan mencari makan"],c:1,e:"Pertumbuhan ditandai bertambahnya ukuran, massa, volume, atau jumlah sel tubuh."},
+{emoji:"🐸",q:"Manakah contoh perkembangan pada hewan?",a:["Berat ayam bertambah","Panjang ikan meningkat","Kecebong berkembang menjadi katak dewasa","Tubuh kelinci semakin besar"],c:2,e:"Perkembangan merupakan perubahan menuju kematangan struktur dan fungsi tubuh."},
+{emoji:"🦋",q:"Urutan metamorfosis sempurna pada kupu-kupu yang benar adalah ...",a:["Telur–nimfa–dewasa","Telur–ulat–kepompong–kupu-kupu","Telur–kepompong–ulat–dewasa","Ulat–telur–dewasa"],c:1,e:"Kupu-kupu mengalami tahap telur, larva (ulat), pupa (kepompong), lalu imago (dewasa)."},
+{emoji:"🦗",q:"Hewan yang mengalami metamorfosis tidak sempurna adalah ...",a:["Kupu-kupu","Nyamuk","Belalang","Lalat"],c:2,e:"Belalang melalui tahap telur, nimfa, dan dewasa tanpa tahap pupa."},
+{emoji:"🐛",q:"Tahap larva pada kupu-kupu disebut ...",a:["Nimfa","Ulat","Pupa","Imago"],c:1,e:"Ulat adalah tahap larva yang aktif makan dan tumbuh sebelum menjadi kepompong."},
+{emoji:"🐸",q:"Urutan daur hidup katak yang tepat adalah ...",a:["Telur–katak dewasa–berudu","Telur–berudu–katak muda–katak dewasa","Berudu–telur–katak dewasa","Telur–katak muda–berudu"],c:1,e:"Katak berkembang dari telur menjadi berudu, katak muda, kemudian katak dewasa."},
+{emoji:"🌿",q:"Faktor eksternal yang dapat memengaruhi pertumbuhan hewan adalah ...",a:["Gen","Hormon","Makanan dan suhu lingkungan","Keturunan saja"],c:2,e:"Makanan, suhu, air, oksigen, dan kondisi lingkungan dapat memengaruhi pertumbuhan."},
+{emoji:"🐔",q:"Mengapa anak ayam yang sehat dapat bertambah besar?",a:["Tidak membutuhkan makanan","Sel tubuh tumbuh dan bertambah","Selalu berganti tempat","Mengalami metamorfosis"],c:1,e:"Pertumbuhan melibatkan pembesaran sel dan peningkatan jumlah sel tubuh."},
+{emoji:"🦋",q:"Perbedaan utama metamorfosis sempurna dan tidak sempurna adalah ...",a:["Jumlah telur yang dihasilkan","Warna tubuh hewan","Ada atau tidaknya tahap pupa","Tempat mencari makan"],c:2,e:"Metamorfosis sempurna memiliki tahap pupa, sedangkan metamorfosis tidak sempurna tidak memilikinya."},
+{emoji:"🐾",q:"Pernyataan yang benar tentang pertumbuhan dan perkembangan adalah ...",a:["Hanya terjadi pada manusia","Pertumbuhan selalu berarti perubahan warna","Pertumbuhan berkaitan dengan ukuran, perkembangan dengan kematangan","Perkembangan tidak terjadi pada hewan"],c:2,e:"Pertumbuhan berkaitan dengan pertambahan ukuran, sedangkan perkembangan berkaitan dengan kematangan struktur dan fungsi."}
+];
+let index=0,choice=null,score=0,locked=false;
+function startGame(){document.getElementById('intro').classList.add('hide');document.getElementById('result').classList.add('hide');document.getElementById('game').classList.remove('hide');index=0;score=0;renderQuestion()}
+function renderQuestion(){
+ locked=false;choice=null;let q=questions[index];
+ document.getElementById('level').textContent='TANTANGAN '+(index+1);
+ document.getElementById('count').textContent='Soal '+(index+1)+' dari '+questions.length;
+ document.getElementById('bar').style.width=((index)/questions.length*100)+'%';
+ document.getElementById('animal').textContent=q.emoji;
+ document.getElementById('question').textContent=q.q;
+ document.getElementById('score').textContent=score;
+ document.getElementById('feedback').className='feedback hide';
+ document.getElementById('check').classList.remove('hide');document.getElementById('check').disabled=true;
+ document.getElementById('next').classList.add('hide');
+ let opts=document.getElementById('options');opts.innerHTML='';
+ q.a.forEach((answer,i)=>{let b=document.createElement('button');b.className='option';b.innerHTML='<span class="letter">'+String.fromCharCode(65+i)+'</span><span></span>';b.querySelector('span:last-child').textContent=answer;b.onclick=()=>selectOption(i);opts.appendChild(b)});
+}
+function selectOption(i){if(locked)return;choice=i;document.querySelectorAll('.option').forEach((b,j)=>b.classList.toggle('selected',i===j));document.getElementById('check').disabled=false}
+function checkAnswer(){
+ if(choice===null||locked)return;locked=true;let q=questions[index],correct=choice===q.c;
+ if(correct)score+=10;
+ document.querySelectorAll('.option').forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');else if(j===choice)b.classList.add('wrong')});
+ let f=document.getElementById('feedback');f.className='feedback '+(correct?'good':'bad');f.textContent=(correct?'🎉 Benar! +10 poin. ':'💡 Belum tepat. ')+q.e;
+ document.getElementById('score').textContent=score;document.getElementById('bar').style.width=((index+1)/questions.length*100)+'%';
+ document.getElementById('check').classList.add('hide');document.getElementById('next').classList.remove('hide');document.getElementById('next').textContent=index===questions.length-1?'Lihat Hasil 🏆':'Soal Berikutnya →';
+}
+function nextQuestion(){if(index<questions.length-1){index++;renderQuestion()}else{showResult()}}
+function showResult(){document.getElementById('game').classList.add('hide');document.getElementById('result').classList.remove('hide');document.getElementById('finalScore').textContent=score+'/100';let title,msg,medal;if(score>=90){title='Ahli Biologi!';msg='Luar biasa! Kamu sangat memahami pertumbuhan dan perkembangan hewan.';medal='🏆'}else if(score>=70){title='Penjelajah Hebat!';msg='Bagus! Kamu sudah memahami banyak konsep penting.';medal='🌟'}else if(score>=50){title='Calon Peneliti!';msg='Terus berlatih dan baca kembali penjelasan pada setiap soal.';medal='🔬'}else{title='Tetap Semangat!';msg='Coba lagi, pelajari penjelasannya, dan tingkatkan skor kamu.';medal='🌱'}document.getElementById('resultTitle').textContent=title;document.getElementById('resultText').textContent=msg;document.getElementById('medal').textContent=medal}
+function restartGame(){document.getElementById('result').classList.add('hide');startGame()}
+</script>
+</body>
+</html>
